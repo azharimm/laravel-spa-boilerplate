@@ -1,7 +1,9 @@
 import store from '../vuex'
 import localforage from 'localforage'
+import NProgress from 'nprogress';
+import '../../../node_modules/nprogress/nprogress.css'
 
-const beforeEach = ((to, from, next) =>{
+export const beforeEach = ((to, from, next) =>{
 	store.dispatch('auth/checkTokenExists').then(()=>{
 		if(to.meta.guest){
 			next({name:'home'});
@@ -18,4 +20,13 @@ const beforeEach = ((to, from, next) =>{
 	})
 });
 
-export default beforeEach;
+export const beforeResolve = ((to, from, next) => {
+	if (to.name) {
+		NProgress.start()
+	}
+	next()
+  })
+  
+export const afterEach = ((to, from) => {
+	NProgress.done()
+  })
